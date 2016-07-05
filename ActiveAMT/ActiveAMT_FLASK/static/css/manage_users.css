@@ -1,0 +1,51 @@
+td, th{
+    font-size: 120%;
+    font-weight: bold;
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.glyphicon-pencil, .glyphicon-trash{
+    margin-right: 4px;
+    font-size: 80%;
+}
+
+.table{
+    background-color: cornflowerblue;
+    margin-bottom: -30px;
+}
+
+.table > thead > tr {
+    background-color: lightslategray;
+}
+
+.table > thead > tr > th, .table > tbody > tr > td {
+    text-align: center;
+}
+
+.table > tbody > tr > td > button{
+
+}
+
+.table > thead > tr > th > a{
+    color: #333333;
+}
+
+.glyphicon-chevron-down, .glyphicon-chevron-up{
+    font-size: 85%;
+    margin-left: 3px;
+}
+
+.table > tbody > tr > td > span{
+    color: orangered;
+}
+
+.inner_button{
+    margin-left: 0;
+}
+
+.outer_button{
+    margin-left: 6px;
+}

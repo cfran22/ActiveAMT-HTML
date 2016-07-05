@@ -1,0 +1,47 @@
+{% extends "Site/site_base.html" %}
+
+{% block content %}
+            <div data-ng-app data-ng-init="users={{ users }}; sortBy = 'id'; sortReverse = false;">
+
+                <div class="row text-center">
+                    <div class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8">
+                        <h3>User Management</h3><hr>
+                    </div>
+                </div>
+
+                <table class="table table-responsive table-bordered">
+                    <thead>
+                        <tr>
+                            <th><a href="#" data-ng-click="sortBy = 'id'; sortReverse = !sortReverse">
+                                User
+                                <span ng-show="sortBy == 'id' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                <span ng-show="sortBy == 'id' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            </a></th>
+                            <th><a href="#" data-ng-click="sortBy = 'password'; sortReverse = !sortReverse">
+                                Password
+                                <span ng-show="sortBy == 'password' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                <span ng-show="sortBy == 'password' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            </a></th>
+                            <th><a href="#" data-ng-click="sortBy = 'is_admin'; sortReverse = !sortReverse">
+                                Admin?
+                                <span ng-show="sortBy == 'is_admin' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                <span ng-show="sortBy == 'is_admin' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            </a></th>
+                            <th>Management</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="u in users | orderBy:sortBy:sortReverse">
+                            <td>{{ u.id | angular }}<span data-ng-show="{{ u.id | angular }} == {{ user.username }}"> (You)</span></td>
+                            <td>{{ u.password | angular }}</td>
+                            <td>{{ u.is_admin | angular }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary inner_button"><span class="glyphicon glyphicon-pencil"></span>Edit</button>
+                                <button data-ng-disabled="{{ u.id | angular }} == {{ user.username }}" type="button" class="btn btn-danger outer_button"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+{% endblock %}

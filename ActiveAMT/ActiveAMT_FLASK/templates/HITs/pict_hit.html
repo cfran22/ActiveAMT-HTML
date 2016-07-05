@@ -1,0 +1,25 @@
+{% extends "HITs/hit_base.html" %}
+
+{% block content %}
+
+        <form action="https://workersandbox.mturk.com/mturk/externalSubmit" role="form" method="POST">
+            <div class="form-group">
+                <div class="row" id="labelRow">
+                    <label for="answer">{{hit_info['hit_quest']}}</label>
+                </div>
+                <div class="row" id="pictureRow">
+                    <img src="{{hit_info['img_src']}}" class="hit_img img-responsive img-rounded">
+                </div>
+                <div class="row" id="inputRow">
+                    <div class="col col-md-10 col-xs-12">
+                        <input {{enabled}} autofocus required type="text" class="form-control" id="answer" name="answer" placeholder="Answer">
+                    </div>
+                </div>
+                <div class="row" id="buttonRow">
+                    <button {{enabled}} type="submit" class="btn btn-primary col col-md-offset-8 col-md-2 col-xs-12" onclick="getAnswer()">Submit</button>
+                </div>
+                <input type="text" class="hidden" name="assignmentId" value="{{hit_info['assignmentId']}}">
+            </div>
+        </form>
+
+{% endblock %}
