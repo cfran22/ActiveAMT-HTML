@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link href="{{ url_for('static', filename='images/icon.ico') }}" rel="icon"/>
         <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
         {% if css %}
         <link href="{{ url_for('static', filename='css/{}'.format(css)) }}" rel="stylesheet"/>
@@ -15,6 +16,9 @@
         {% else %}
         <title>ActiveAMT</title>
         {% endif %}
+
+        <!--  AngularJS -->
+        <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
 
         <style>
             .navbar{
@@ -52,6 +56,15 @@
                 .navbreak{
                     border-left: 0;
                 }
+
+                #admin_dd{
+                    margin-top: 0;
+                    padding-bottom: 0;
+                }
+
+                #admin_dd_link{
+                    padding-top: 0;
+                }
             }
             .glyphicon-off, .glyphicon-cog, .glyphicon-user, .glyphicon-wrench{
                 margin-right:4px;
@@ -60,11 +73,13 @@
                 color: cornflowerblue;
             }
 
-            .navbar-inverse .navbar-nav .open .dropdown-menu>li>a,.navbar-inverse .navbar-nav .open .dropdown-menu {
-                margin-right: 0;
-                margin-top: 6px;
-                background-color: #222222;
-                color:#9d9d9d;
+            @media(min-width: 768px) {
+                .navbar-inverse .navbar-nav .open .dropdown-menu > li > a, .navbar-inverse .navbar-nav .open .dropdown-menu {
+                    margin-right: 0;
+                    margin-top: 6px;
+                    background-color: #222222;
+                    color: #9d9d9d;
+                }
             }
 
         </style>
@@ -98,11 +113,11 @@
                     {% if user['is_admin'] %}
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item dropdown dropdown-right">
-                            <a class="navbreak dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span><strong>Admin Controls</strong></a>
+                            <a id="admin_dd_link" class="navbreak dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-cog"></span><strong>Admin Controls</strong></a>
                              <ul class="dropdown-menu" id="admin_dd">
 
                                  <li class="nav-item">
-                                     <a href="#"><span class="glyphicon glyphicon-wrench"></span><strong>Manage HITs</strong></a>
+                                     <a href="/manageHITs"><span class="glyphicon glyphicon-wrench"></span><strong>Manage HITs</strong></a>
                                  </li>
 
                                  <li class="nav-item">
@@ -148,9 +163,15 @@
             {% block content %}{% endblock %}
         </div>
 
+        <!--  Bootstrap required files -->
         <script src="{{ url_for('static', filename='js/jquery-2.2.4.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+        <!-- Enable tooltips -->
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        </script>
     </body>
 
 </html>

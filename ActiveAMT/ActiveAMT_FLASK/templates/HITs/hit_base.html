@@ -6,6 +6,9 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
+        {% if css %}
+        <link href="{{ url_for('static', filename='css/{}'.format(css)) }}" rel="stylesheet"/>
+        {% endif %}
         {% if title %}
         <title>{{title}}</title>
         {% else %}
@@ -13,28 +16,9 @@
         {% endif %}
 
         <style>
-
-            .hit_img{
-                max-height: 250px;
-                margin-bottom: 10px;
-                box-shadow: -9px 9px 28px -3px rgba(0,0,0,0.63);
+            .container{
+                padding-top: 20px;
             }
-            .form-group{
-                margin-top: 20px;
-            }
-            .form-control{
-                margin-left: -17px;
-            }
-            #buttonRow{
-                margin-right: 18px;
-            }
-            .row{
-                margin-top: 10px;
-            }
-            .col{
-
-            }
-
         </style>
     </head>
 

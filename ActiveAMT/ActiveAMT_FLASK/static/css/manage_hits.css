@@ -1,0 +1,77 @@
+h3 {
+    font-weight: bold;
+}
+
+td, th{
+    font-size: 105%;
+    font-weight: bold;
+}
+
+#filtDDbutton{
+    padding-right: 30px;
+}
+
+#filtDDbutton > .glyphicon-triangle-bottom{
+
+}
+
+#downloadRow{
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.input-group > .input-group-btn > ul > li > a, .dropdown > ul > li > a {
+    font-weight: bold;
+}
+
+.col-xs-12{
+    margin-bottom: 5px;
+}
+
+.glyphicon-ok{
+    margin-right: 6px;
+    color: cornflowerblue;
+}
+
+.glyphicon-triangle-bottom{
+    margin-left: 5px;
+    margin-top: 10px;
+    position: absolute;
+}
+
+.table{
+    background-color: cornflowerblue;
+    margin-bottom: 0;
+}
+
+.table > thead > tr {
+    background-color: lightslategray;
+}
+
+.table > thead > tr > th, .table > tbody > tr > td {
+    text-align: center;
+}
+
+.table > thead > tr > th > a{
+    color: #333333;
+}
+
+.table > tbody > tr > td > a{
+    color: #333333;
+}
+
+#tableManager{
+    margin-bottom: 4px;
+}
+
+@media(max-width: 991px) and (min-width: 768px){
+    #ansCol{
+        width: 1%;
+        white-space: nowrap;
+    }
+}
+
+#typeCol{
+    width: 1%;
+    white-space: nowrap;
+}

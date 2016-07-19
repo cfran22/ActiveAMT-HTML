@@ -2,24 +2,27 @@
 
 {% block content %}
 
-        <form action="https://workersandbox.mturk.com/mturk/externalSubmit" role="form" method="POST">
-            <div class="form-group">
-                <div class="row" id="labelRow">
-                    <label for="answer">{{hit_info['hit_quest']}}</label>
-                </div>
-                <div class="row" id="pictureRow">
-                    <img src="{{hit_info['img_src']}}" class="hit_img img-responsive img-rounded">
-                </div>
-                <div class="row" id="inputRow">
-                    <div class="col col-md-10 col-xs-12">
-                        <input {{enabled}} autofocus required type="text" class="form-control" id="answer" name="answer" placeholder="Answer">
+        <form role="FORM" action="https://workersandbox.mturk.com/mturk/externalSubmit" method="POST">
+
+            <div class="row">
+                <div class="col-md-10 col-xs-12">
+                    <div class="form-group">
+                        <label for="hit_ans">{{hit_info['hit_quest']}}</label>
+                        <img id="hit_img" src="{{hit_info['img_src']}}" class="img img-responsive img-rounded">
+                        <input id="hit_ans" {{enabled}} required type="text" class="form-control" placeholder="Answer" name="answer"/>
                     </div>
                 </div>
-                <div class="row" id="buttonRow">
-                    <button {{enabled}} type="submit" class="btn btn-primary col col-md-offset-8 col-md-2 col-xs-12" onclick="getAnswer()">Submit</button>
-                </div>
-                <input type="text" class="hidden" name="assignmentId" value="{{hit_info['assignmentId']}}">
             </div>
+            <div class="row">
+                <div class="col-md-offset-7 col-md-3 col-xs-12">
+                    <button {{enabled}} autofocus required type="submit" class="btn btn-primary btn-block" onclick="getAnswer()">Submit</button>
+                </div>
+            </div>
+
+            <div id="hidden_items" class="hidden">
+                <input type="text" name="assignmentId" value="{{hit_info['assignmentId']}}"/>
+            </div>
+
         </form>
 
 {% endblock %}

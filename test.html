@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+
+<html lang="en-US">
+
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="container">
+            <div id="heading" class="row">
+                <h3>Test HIT with multiple answers</h3>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-8">
+                    <form action="https://workersandbox.mturk.com/mturk/externalSubmit" role="form" method="POST">
+                        <div class="form-group">
+                            <label for="input1">{{ hit_info['vars']['q1'] }}</label>
+                            <input id="input1" class="form-control collectable" type="text" name="{{ hit_info['vars'].keys()[0] }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="input2">{{ hit_info['vars']['q2'] }}</label>
+                            <input id="input2" class="form-control collectable" type="text" name="{{ hit_info['vars'].keys()[1] }}">
+                        </div>
+
+                        <div class="form-group">
+                            <button {{ enabled }} type="submit" class="btn btn-primary btn-md">Submit</button>
+                        </div>
+
+                        <input type="text" class="hidden" name="assignmentId" value="{{hit_info['assignmentId']}}">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <script>
+
+            //Function to extract the name and value from each 'collectable' input
+            //POSTs this data back to flask as key val pairs, split by ':', separated by ',', as a single string
+            //For parsing purposes, name and value are wrapped with forward slashes.
+            $('form').submit(function(){
+                var request = new XMLHttpRequest();
+                var method = "POST";
+                var url = 'https://127.0.0.1:5000/getAnswers';
+                var async = false;
+                var answers = [];
+
+                $("input.collectable").each(function () {
+
+                    var name = $(this).attr('name');
+                    var value = $(this).val();
+
+                    var name_val = '/' + name + ':' + value + '/';
+
+                    if(name != null && value != null) {
+                        answers.push(name_val);
+                    }
+
+                });
+
+                var params = "answers=" + answers;
+
+                request.open(method, url, async);
+                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                request.send(params);
+            });
+
+        </script>
+
+    </body>
+
+</html>

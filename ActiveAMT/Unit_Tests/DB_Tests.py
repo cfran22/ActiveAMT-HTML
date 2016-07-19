@@ -1,5 +1,6 @@
 # Imported to determine if files are created/destroyed correctly
 import os
+
 from ActiveAMT.ActiveAMT_DB import HITDbHandler
 
 
@@ -9,6 +10,8 @@ class DBTests(object):
     """
 
     def __init__(self):
+        if os.path.exists('./hit_database.db'):
+            os.remove('./hit_database.db')
         print('\n****Running database tests...\n')
         self.test_db = HITDbHandler()
 
@@ -59,16 +62,14 @@ class DBTests(object):
         self.test_db.add_to_db(mock_hit)
         self.test_db.add_to_db(junk_hit)
 
-        returned_hit = self.db_to_dict(self.test_db.get_hit_by_id(mock_hit['id']))
+        returned_hit = self.test_db.get_hit_by_id(mock_hit['id'])
 
         if returned_hit is None:
             add_to_passed = False
             add_to_reason = "HIT returned from DB is None"
         else:
             for key in mock_hit.keys():
-                if mock_hit[key] == returned_hit[key]:
-                    continue
-                else:
+                if mock_hit[key] != returned_hit[key]:
                     get_from_passed = False
                     get_from_reason = "Key[{0}] did not match between the mock hit and DB entry".format(key)
                     break
@@ -90,7 +91,7 @@ class DBTests(object):
 
         self.test_db.set_answer_for_hit('1234TEST5678', 'New answer')
 
-        if self.test_db.get_hit_by_id('1234TEST5678').answer == 'New answer':
+        if self.test_db.get_hit_by_id('1234TEST5678')['answer'] == 'New answer':
             print('Set Answer - PASS')
         else:
             print('Set Answer - FAIL')
@@ -133,23 +134,6 @@ class DBTests(object):
         """
         print('\nRemoving database...')
         os.remove(self.test_db.db_location)
-
-    def db_to_dict(self, db_entry):
-        """
-        Helper method to map a returned database entry to a regular dict.
-        """
-        ret_hit_dict = {
-            'id': db_entry.id,
-            'task': {
-                'type': db_entry.type,
-                'question': db_entry.question,
-                'img_src': db_entry.img_src,
-                'template': db_entry.template
-            },
-            'answer': db_entry.answer
-        }
-
-        return ret_hit_dict
 
     def run_all(self):
         """

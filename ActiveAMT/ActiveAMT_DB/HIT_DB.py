@@ -1,4 +1,5 @@
 import os
+
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -31,6 +32,8 @@ class HIT(Base):
     img_src = Column(String(255))
     question = Column(String(255), nullable=False)
     answer = Column(String(255))
+    html = Column(String(255))
+    variables = Column(String(255))
     completed = Column(Boolean)
 
 
@@ -41,7 +44,7 @@ class HITDbHandler(object):
 
     def __init__(self):
         """
-        Simply check if there is a HIT database in the CWD. If so, delete it to start fresh.
+        Simply check if there is a HIT database in the CWD. If not, make a new one.
         """
         self.db_location = db_location
         if not os.path.exists(self.db_location):
@@ -62,10 +65,27 @@ class HITDbHandler(object):
         session = self.connect_to_db()
 
         task_type = hit['task']['type']
+
+        # These attributes may or may not be keys for each hit.
+        # Must check for key then map to variable to prevent explosions.
         img_src = ""
+        question = ""
+        html = ""
+        variables = ""
+
         if task_type == 'img':
             img_src = hit['task']['img_src']
-        question = hit['task']['question']
+
+        if 'question' in hit['task']:
+            question = hit['task']['question']
+        elif task_type != 'html':
+            raise UserWarning("You must provide a question for all 'txt' and 'img' type tasks!")
+
+        if 'html' in hit['task']:
+            html = hit['task']['html']
+
+        if 'db_vars' in hit['task']:
+            variables = hit['task']['db_vars']
 
         new_hit = HIT(
                         id=hit['id'],
@@ -74,6 +94,8 @@ class HITDbHandler(object):
                         img_src=img_src,
                         question=question,
                         answer=hit['answer'],
+                        html=html,
+                        variables=variables,
                         completed=False
                       )
         session.add(new_hit)
@@ -85,8 +107,8 @@ class HITDbHandler(object):
         """
         Take in a HIT id. Remove that HIT.
         """
-        hit_to_remove = self.get_hit_by_id(hit_id)
         session = self.connect_to_db()
+        hit_to_remove = session.query(HIT).filter(HIT.id == hit_id).first()
         session.delete(hit_to_remove)
         session.commit()
         session.close()
@@ -99,7 +121,27 @@ class HITDbHandler(object):
         hit = session.query(HIT).filter(HIT.id == hit_id).first()
         session.close()
 
+        hit = self.db_to_dict(hit)
+
         return hit
+
+    def get_all_hits(self):
+        """
+        Return a list of all of the HITs in the database.
+        """
+        hits = []
+
+        session = self.connect_to_db()
+        temp_hits = session.query(HIT).all()
+        session.close()
+
+        for hit in temp_hits:
+
+            temp_hit = self.db_to_dict(hit)
+
+            hits.append(temp_hit)
+
+        return hits
 
     def get_completed_hits(self):
         """
@@ -109,7 +151,14 @@ class HITDbHandler(object):
         completed_hits = session.query(HIT).filter(HIT.completed).all()
         session.close()
 
-        return completed_hits
+        hits = []
+
+        for hit in completed_hits:
+
+            temp_hit = self.db_to_dict(hit)
+            hits.append(temp_hit)
+
+        return hits
 
     def get_remaining_hits(self):
         """
@@ -119,7 +168,14 @@ class HITDbHandler(object):
         remaining_hits = session.query(HIT).filter(HIT.completed == False).all()
         session.close()
 
-        return remaining_hits
+        hits = []
+
+        for hit in remaining_hits:
+
+            temp_hit = self.db_to_dict(hit)
+            hits.append(temp_hit)
+
+        return hits
 
     def set_answer_for_hit(self, hit_id, answer):
         """
@@ -132,13 +188,35 @@ class HITDbHandler(object):
         session.commit()
         session.close()
 
-    def remove_db(self):
+    def db_to_dict(self, hit):
         """
-        Simple method to remove the HIT database in the CWD
+        Helper method to map a DB entry to a dict
         """
-        if os.path.exists(self.db_location):
-            os.remove(self.db_location)
-            print("\nRemoving database...")
+
+        # Un-flattens variables, list of dictionaries.
+        variables = {}
+        kv_pairs = hit.variables.split(',')
+        del kv_pairs[-1]  # The string ended with a comma, so the last index is blank.
+
+        for pair in kv_pairs:
+            split = pair.split(':')
+            key, val = split[0], split[1]
+
+            variables[key] = val
+
+        temp_hit = {
+            'id': str(hit.id),
+            'type': str(hit.type),
+            'template': str(hit.template),
+            'img_src': str(hit.img_src),
+            'question': str(hit.question),
+            'answer': str(hit.answer),
+            'html': str(hit.html),
+            'variables': variables,
+            'completed': bool(hit.completed)
+        }
+
+        return temp_hit
 
     def connect_to_db(self):
         """

@@ -2,19 +2,24 @@
 
 {% block content %}
 
-        <form action="https://workersandbox.mturk.com/mturk/externalSubmit" method="POST">
+        <form role="FORM" action="https://workersandbox.mturk.com/mturk/externalSubmit" method="POST">
 
-            <div class="form-group row">
-                <label for="hit_ans" style="margin-top:20px;">{{hit_info['hit_quest']}}</label>
-                <div>
-                    <input {{enabled}} autofocus required type="text" class="form-control col-lg-pull-6" id="hit_ans" name="answer" placeholder="Answer"/>
+            <div class="row">
+                <div class="col-md-10 col-xs-12">
+                    <div class="form-group">
+                        <label for="hit_ans">{{hit_info['hit_quest']}}</label>
+                        <input {{enabled}} autofocus required type="text" id="hit_ans" class="form-control" placeholder="Answer" name="answer">
+                    </div>
                 </div>
-                <div style="margin-top:15px;">
-                    <button {{enabled}} id="subbut" type="submit" class="btn btn-primary col-xs-offset-10 col-xs-2 col-lg-offset-10 col-lg-2" onclick="getAnswer()">Submit</button>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-7 col-md-3 col-xs-12">
+                    <button {{enabled}} type="submit" class="btn btn-primary btn-block" onclick="getAnswer()">Submit</button>
                 </div>
-                <div id="hidden items">
-                    <input type="text" class="hidden" title="assignmentId" name="assignmentId" value="{{hit_info['assignmentId']}}"/>
-                </div>
+            </div>
+
+            <div id="hidden_items" class="hidden">
+                <input type="text" name="assignmentId" value="{{hit_info['assignmentId']}}"/>
             </div>
 
         </form>

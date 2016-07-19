@@ -1,7 +1,7 @@
 {% extends "Site/site_base.html" %}
 
 {% block content %}
-            <div data-ng-app data-ng-init="users={{ users }}; sortBy = 'id'; sortReverse = false;">
+            <div data-ng-app="manageUsers" data-ng-controller="manageUsersController" data-ng-init="users={{ users }}; sortBy = 'id'; sortReverse = false; del_yes = false; editing = false;">
 
                 <div class="row text-center">
                     <div class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8">
@@ -9,39 +9,112 @@
                     </div>
                 </div>
 
-                <table class="table table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <th><a href="#" data-ng-click="sortBy = 'id'; sortReverse = !sortReverse">
-                                User
-                                <span ng-show="sortBy == 'id' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                                <span ng-show="sortBy == 'id' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                            </a></th>
-                            <th><a href="#" data-ng-click="sortBy = 'password'; sortReverse = !sortReverse">
-                                Password
-                                <span ng-show="sortBy == 'password' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                                <span ng-show="sortBy == 'password' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                            </a></th>
-                            <th><a href="#" data-ng-click="sortBy = 'is_admin'; sortReverse = !sortReverse">
-                                Admin?
-                                <span ng-show="sortBy == 'is_admin' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                                <span ng-show="sortBy == 'is_admin' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                            </a></th>
-                            <th>Management</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-ng-repeat="u in users | orderBy:sortBy:sortReverse">
-                            <td>{{ u.id | angular }}<span data-ng-show="{{ u.id | angular }} == {{ user.username }}"> (You)</span></td>
-                            <td>{{ u.password | angular }}</td>
-                            <td>{{ u.is_admin | angular }}</td>
-                            <td>
-                                <button type="button" class="btn btn-primary inner_button"><span class="glyphicon glyphicon-pencil"></span>Edit</button>
-                                <button data-ng-disabled="{{ u.id | angular }} == {{ user.username }}" type="button" class="btn btn-danger outer_button"><span class="glyphicon glyphicon-trash"></span>Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="manageBar" class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#addUser"><span class="glyphicon glyphicon-plus-sign"></span>Add User</button>
+                    </div>
+                    <div class="col-md-offset-5 col-md-4 col-xs-12">
+                        <div class="input-group">
+                            <input type="text" data-ng-model="filterBy[filter]" class="form-control" placeholder="Filter by..." aria-describedby="filterByAddon">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ng-cloak>
+                                  {{ dd_label | angular }}<span class="glyphicon glyphicon-triangle-bottom"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a class="dropdown-item" href="" data-ng-click="dd.any=true; changeFilter('$'); dd_label='Any'; dd.id=false; dd.password=false; dd.is_admin=false"><span class="glyphicon glyphicon-ok" data-ng-show="dd.any"></span>Any</a></li>
+                                    <li><a class="dropdown-item" href="" data-ng-click="dd.id=true; changeFilter('id'); dd_label='Username'; dd.any=false; dd.password=false; dd.is_admin=false;"><span class="glyphicon glyphicon-ok" data-ng-show="dd.id"></span>Username</a></li>
+                                    <li><a class="dropdown-item" href="" data-ng-click="dd.password=true; changeFilter('password'); dd_label='Password'; dd.any=false; dd.id=false; dd.is_admin=false;"><span class="glyphicon glyphicon-ok" data-ng-show="dd.password"></span>Password</a></li>
+                                    <li><a class="dropdown-item" href="" data-ng-click="dd.is_admin=true; changeFilter('is_admin'); dd_label='Admin'; dd.any=false; dd.id=false; dd.password=false;"><span class="glyphicon glyphicon-ok" data-ng-show="dd.is_admin"></span>Admin</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="modal fade" id="addUser">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title"><strong>Add New User</strong></h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Username" data-ng-model="username_in_add">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Password" data-ng-model="password_in_add">
+                                    </div>
+                                    <div id="adminCheckbox" class="form-group">
+                                        <label for="isAdmin">Give admin rights?</label>
+                                        <input id="isAdmin" type="checkbox" data-ng-model="is_admin_in_add">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" data-ng-click="addUser()" class="btn btn-primary btn-block">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><a href="" data-ng-click="sortBy = 'id'; sortReverse = !sortReverse">
+                                    User
+                                    <span data-ng-show="sortBy == 'id' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                    <span data-ng-show="sortBy == 'id' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                </a></th>
+                                <th><a href="" data-ng-click="sortBy = 'password'; sortReverse = !sortReverse">
+                                    Password
+                                    <span data-ng-show="sortBy == 'password' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                    <span data-ng-show="sortBy == 'password' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                </a></th>
+                                <th><a href="" data-ng-click="sortBy = 'is_admin'; sortReverse = !sortReverse">
+                                    Admin?
+                                    <span data-ng-show="sortBy == 'is_admin' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                                    <span data-ng-show="sortBy == 'is_admin' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                </a></th>
+                                <th>Management</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="u in users | filter:filterBy | orderBy:sortBy:sortReverse">
+                                <td>
+                                    <span data-ng-cloak data-ng-show="!editing">{{ u.id | angular }}</span>
+                                    <span data-ng-show="editing"><input type="text" class="form-control" placeholder="{{ u.id | angular }}" data-ng-model="edit.username"></span>
+                                </td>
+                                <td>
+                                    <span data-ng-cloak data-ng-show="!editing">{{ u.password | angular }}</span>
+                                    <span data-ng-show="editing"><input type="text" class="form-control" placeholder="{{ u.password | angular }}" data-ng-model="edit.password"></span>
+                                </td>
+                                <td>
+                                    <span data-ng-cloak data-ng-show="!editing">{{ u.is_admin | angular }}</span>
+                                    <span data-ng-init="edit.admin = (u.is_admin == 'True')" data-ng-show="editing"><input id="admin_table_checkbox" type="checkbox" data-ng-model="edit.admin"></span>
+                                </td>
+                                <td>
+                                    <div data-ng-show="del_yes" class="help-block">
+                                        Are you sure?
+                                    </div>
+                                    <button data-ng-show="!del_yes && !editing" data-ng-click="editing = true" type="button" class="btn btn-primary inner_button"><span class="glyphicon glyphicon-pencil"></span>Edit</button>
+                                    <button data-ng-show="!del_yes && !editing" data-ng-click="del_yes = true" type="button" class="btn btn-danger outer_button"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+
+                                    <span id="save_cancel_block" data-ng-show="editing">
+                                        <button data-ng-show="editing" data-ng-click="updateUser(u, edit); editing = false;" type="button" class="btn btn-success inner_button"><span class="glyphicon glyphicon-floppy-saved"></span>Save</button>
+                                        <button data-ng-show="editing" data-ng-click="editing = false; edit.password = ''; edit.username = '';" type="button" class="btn btn-danger outer_button"><span class="glyphicon glyphicon-floppy-remove"></span>Cancel</button>
+                                    </span>
+
+                                    <button data-ng-show="del_yes" data-ng-click="delUser(u.id)" type="button" class="btn btn-success inner_button"><span class="glyphicon glyphicon-ok-sign"></span>Yes</button>
+                                    <button data-ng-show="del_yes" data-ng-click="del_yes = false" type="button" class="btn btn-danger outer_button"><span class="glyphicon glyphicon-remove-sign"></span>No</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+        <script src="{{ url_for('static', filename='js/manageUsers.js') }}"></script>
 {% endblock %}

@@ -10,7 +10,32 @@
     </div>
 
     <div id="welcomepara" class="col-md-12 col-xs-12">
-       Bacon ipsum dolor amet rump jerky leberkas, pancetta frankfurter meatloaf drumstick venison turkey filet mignon pork loin tail shankle salami. Alcatra swine tenderloin rump, pork hamburger sausage tongue corned beef meatloaf andouille cupim flank chuck bacon. Jowl cow jerky meatball pig frankfurter, capicola flank pastrami chicken beef tri-tip. Pig cupim swine andouille picanha tri-tip brisket strip steak cow salami drumstick chuck. Tenderloin pig shankle shoulder venison kevin jowl andouille drumstick ground round short loin tongue brisket ham hock boudin. Beef kevin ground round pork chop, hamburger pig short loin ribeye ham hock swine. Pork belly tri-tip rump bacon alcatra ham hock, shankle ribeye.
+
+        <p>
+           Welcome to ActiveAMT, an API written to make working with Amazon Mechanical Turk much, much simpler.
+        </p>
+        <p>
+            You may be thinking, how much simpler can it get? What makes this API better than the rest? Yes, there are
+            already a handful of APIs out there that simplify working with AMT, but with those APIs, you still have to
+            manually write the algorithms necessary for producing each and every HIT, collecting the data, etc. The
+            syntax and such may be simple, but the task is tedious.
+        </p>
+        <p>
+            With ActiveAMT, everything is handled for you. ActiveAMT wraps a pre-existing AMT API written with Python
+            called <a href="http://www.cs.umd.edu/hcil/crowdlib/">Crowdlib</a>. Crowdlib was written by Alex Quinn and Ben Bederson from the University of Maryland. ActiveAMT
+            utilizes Crowdlib to programmatically create and register HITs with AMT.
+        </p>
+        <p>
+            Another way that ActiveAMT simplifies the process of working with AMT is that all of the HITs produced with
+            ActiveAMT are external HITs. If you are somewhat unfamiliar with the HIT types that AMT supports, an external
+            HIT is one that the end user hosts themselves as HTML. This provides a ton of flexibility with how you want
+            your HITs to look. A simple change in the HTML and every active HIT on AMT sees the change. Don't worry about
+            how you'll be hosting your HTML though; ActiveAMT has this covered as well. Through the use of <a href="http://flask.pocoo.org/">Flask</a>, a Python
+            web server framework, ActiveAMT is able to host the HITs within itself.
+        </p>
+        <p>
+            For more information on how to use ActiveAMT in your own project, please refer to the <a href="/howTo">How To</a> page.
+        </p>
     </div>
 </div>
 

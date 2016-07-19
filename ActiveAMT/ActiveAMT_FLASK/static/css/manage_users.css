@@ -3,18 +3,44 @@ td, th{
     font-weight: bold;
 }
 
+#isAdmin{
+    height: 15px;
+    width: 15px;
+    margin-left: 5px;
+    position: absolute;
+}
+
+#adminCheckbox{
+
+}
+
+.glyphicon-triangle-bottom{
+    margin-left: 5px;
+    margin-right: -2px;
+    font-size: 95%;
+}
+
 h3 {
     font-weight: bold;
 }
 
-.glyphicon-pencil, .glyphicon-trash{
+.glyphicon-pencil, .glyphicon-trash, .glyphicon-floppy-saved, .glyphicon-floppy-remove{
     margin-right: 4px;
     font-size: 80%;
 }
 
+.glyphicon-plus-sign, .glyphicon-ok-sign, .glyphicon-remove-sign{
+    margin-right: 4px;
+    font-size: 90%;
+}
+
+#manageBar{
+    margin-bottom: 5px;
+}
+
 .table{
     background-color: cornflowerblue;
-    margin-bottom: -30px;
+    margin-bottom: 0;
 }
 
 .table > thead > tr {
@@ -38,8 +64,18 @@ h3 {
     margin-left: 3px;
 }
 
+.glyphicon-ok{
+    margin-right: 6px;
+    color: cornflowerblue;
+}
+
 .table > tbody > tr > td > span{
-    color: orangered;
+
+}
+
+.help-block{
+    font-size: 90%;
+    color: #333333;
 }
 
 .inner_button{
@@ -48,4 +84,20 @@ h3 {
 
 .outer_button{
     margin-left: 6px;
+}
+
+.col-xs-12{
+    margin-bottom: 5px;
+}
+
+#admin_table_checkbox{
+    margin-top: 8px;
+    height: 18px;
+    width: 18px;
+}
+
+@media(max-width: 991px) and (min-width: 768px){
+    #save_cancel_block{
+        margin-right: 40px;
+    }
 }

@@ -1,4 +1,5 @@
 import os
+
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -127,7 +128,7 @@ class UserDbHandler(object):
             username = user.id
             if req_user['password'] == user.password:
                 is_user_valid = True
-                is_admin = user.is_admin,
+                is_admin = user.is_admin
                 password = True
             else:
                 password = False
@@ -142,6 +143,18 @@ class UserDbHandler(object):
 
         return user
 
+    def update_user(self, old_username, new_username, new_password, new_is_admin):
+        """
+        Replaces the existing user's credentials with the new parameters.
+        """
+        session = self.connect_to_db()
+        user = session.query(User).filter(User.id == old_username).first()
+        user.id = new_username
+        user.password = new_password
+        user.is_admin = new_is_admin
+        session.commit()
+        session.close()
+
     def connect_to_db(self):
         """
         Helper function that makes a connection to the USER database and returns the connection.
@@ -153,4 +166,3 @@ class UserDbHandler(object):
         session = DBSession()
 
         return session
-
