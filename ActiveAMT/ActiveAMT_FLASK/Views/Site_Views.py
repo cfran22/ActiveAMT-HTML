@@ -1,7 +1,9 @@
 from flask import render_template, request, redirect, session, url_for
 
 from ActiveAMT.ActiveAMT_DB.HIT_DB import HITDbHandler
-from ActiveAMT.ActiveAMT_FLASK import app, UserDbHandler
+from ActiveAMT.ActiveAMT_FLASK import app, UserDbHandler, flask_dir
+
+import time, os, json
 
 hit_db = HITDbHandler()
 user_db = UserDbHandler()
@@ -201,6 +203,33 @@ def update_user():
                            Helper Methods
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+@app.route('/downloadTable', methods=['POST'])
+def download_table():
+
+    post_data = request.form['hit_ids']
+
+    hit_ids = post_data.split(',')
+    del hit_ids[-1]
+
+    print("\nIn download table....")
+    print("\tHIT IDs: {}".format(hit_ids))
+
+    hits = []
+
+    for hit_id in hit_ids:
+        hits.append(hit_db.get_hit_by_id(hit_id))
+
+    if not os.path.exists(flask_dir + 'static' '/UserSavedTables'):
+        os.mkdir(flask_dir + 'static' '/UserSavedTables')
+
+    fname = 'filtered_hits{}.txt'.format(time.time())
+    filtered_hits = open('{}static/UserSavedTables/{}'.format(flask_dir, fname), 'w')
+    filtered_hits.write(json.dumps(hits))
+    filtered_hits.close()
+
+    return 'static/UserSavedTables/{}'.format(fname)
 
 
 def verify_login(requested_site, requires_admin):

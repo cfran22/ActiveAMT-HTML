@@ -1,0 +1,190 @@
+{% extends "Site/site_base.html" %}
+
+{% block content %}
+
+        <div data-ng-app="manageHITs" data-ng-controller="manageHITsController" data-ng-init="hits={{ hits }};">
+
+            <div class="row text-center">
+                <div class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8">
+                    <h3>HIT Management</h3><hr>
+                </div>
+            </div>
+
+            <div id="tableManager" class="row">
+                <div id="filterBar" class="col-md-4 col-xs-12">
+
+                    <!-- NEW FILTER START --->
+                    <button type="button" class="btn btn-secondary btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ng-cloak>Filter By...<span class="glyphicon glyphicon-triangle-bottom"></span></button>
+                    <ul id="allFiltDD" class="dropdown-menu dropdown-menu-right">
+                        <li class="row">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="anyFilt">Any:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="anyFilt" data-ng-model="filterBy['$']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="id">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="idFilt">ID:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="idFilt" data-ng-model="filterBy['id']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="type">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="typeFilt">Type:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="typeFilt" data-ng-model="filterBy['type']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="question">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="questFilt">Question:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="questFilt" data-ng-model="filterBy['question']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="answer">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="ansFilt">Answer:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="ansFilt" data-ng-model="filterBy['answer']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="template">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="templFilt">Template:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="templFilt" data-ng-model="filterBy['template']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="img_src">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="imgFilt">Image Source:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="imgFilt" data-ng-model="filterBy['img_src']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                        <li class="row" data-ng-show="completed">
+                            <div class="col-md-2 col-xs-3">
+                                <label for="cmplFilt">Completed:</label>
+                            </div>
+                            <div class="col-md-10 col-xs-9">
+                                <input class="form-control" id="cmplFilt" data-ng-model="filterBy['completed']" placeholder="Search for..."/>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- NEW FILTER END --->
+
+                    <!-- OLD FILTER Start
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Filter by..." data-ng-model="filterBy[filter]" data-ng-change="updateFilters(filterBy[filter])">
+                        <div class="input-group-btn">
+                            <button id="filtDDbutton" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ng-cloak>
+                              {{ dd_label | angular }}<span class="glyphicon glyphicon-triangle-bottom"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a class="dropdown-item" href="" data-ng-click="clickDDitem('$');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.$"></span>Any</a></li>
+                                <li data-ng-show="id"><a class="dropdown-item" href="" data-ng-click="clickDDitem('id'); "><span class="glyphicon glyphicon-ok" data-ng-show="dd.id"></span>ID</a></li>
+                                <li data-ng-show="type"><a class="dropdown-item" href="" data-ng-click="clickDDitem('type');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.type"></span>Type</a></li>
+                                <li data-ng-show="question"><a class="dropdown-item" href="" data-ng-click="clickDDitem('question');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.question"></span>Question</a></li>
+                                <li data-ng-show="answer"><a class="dropdown-item" href="" data-ng-click="clickDDitem('answer');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.answer"></span>Answer</a></li>
+                                <li data-ng-show="template"><a class="dropdown-item" href="" data-ng-click="clickDDitem('template');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.template"></span>Template</a></li>
+                                <li data-ng-show="img_src"><a class="dropdown-item" href="" data-ng-click="clickDDitem('img_src');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.img_src"></span>Image Source</a></li>
+                                <li data-ng-show="completed"><a class="dropdown-item" href="" data-ng-click="clickDDitem('completed');"><span class="glyphicon glyphicon-ok" data-ng-show="dd.completed"></span>Completed</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                        OLD FILTER END --->
+
+                </div>
+                <div class="col-md-offset-5 col-md-3 col-xs-12">
+                    <div class="dropdown">
+                        <button class="btn btn-block btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Show Columns<span class="glyphicon glyphicon-triangle-bottom"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="" data-ng-click="id=!id; filterBy['id']='';"><span data-ng-show="id" class="glyphicon glyphicon-ok"></span>ID</a></li>
+                            <li><a href="" data-ng-click="type=!type; filterBy['type']='';"><span data-ng-show="type" class="glyphicon glyphicon-ok"></span>Type</a></li>
+                            <li><a href="" data-ng-click="question=!question; filterBy['question']='';"><span data-ng-show="question" class="glyphicon glyphicon-ok"></span>Question</a></li>
+                            <li><a href="" data-ng-click="answer=!answer; filterBy['answer']='';"><span data-ng-show="answer" class="glyphicon glyphicon-ok"></span>Answer</a></li>
+                            <li><a href="" data-ng-click="template=!template; filterBy['template']='';"><span data-ng-show="template" class="glyphicon glyphicon-ok"></span>Template</a></li>
+                            <li><a href="" data-ng-click="img_src=!img_src; filterBy['img_src']='';"><span data-ng-show="img_src" class="glyphicon glyphicon-ok"></span>Image Source</a></li>
+                            <li><a href="" data-ng-click="completed=!completed; filterBy['completed']='';"><span data-ng-show="completed" class="glyphicon glyphicon-ok"></span>Completed</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th data-ng-show="id">
+                                <a href="" data-ng-click="sortBy='id';sortReverse=!sortReverse;">ID
+                                <span data-ng-show="sortBy == 'id' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == 'id' && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                            <th id="typeCol" data-ng-show="type">
+                                <a href="" data-ng-click="sortBy='type';sortReverse=!sortReverse;">Type
+                                <span data-ng-show="sortBy == 'type' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == 'type' && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                            <th data-ng-show="question">
+                                <a href="" data-ng-click="sortBy='question';sortReverse=!sortReverse;">Question
+                                <span data-ng-show="sortBy == 'question' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == 'question' && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                            <th id="ansCol" data-ng-show="answer">
+                                <a href="" data-ng-click="sortBy='answer';sortReverse=!sortReverse;">Answer
+                                <span data-ng-show="sortBy == 'answer' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == 'answer' && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                            <th data-ng-show="template">
+                                <a href="" data-ng-click="sortBy='template';sortReverse=!sortReverse;">Template
+                                <span data-ng-show="sortBy == 'template' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == 'template' && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                            <th data-ng-show="img_src">
+                                <a href="" data-ng-click="sortBy='img_src';sortReverse=!sortReverse;">Image Source
+                                <span data-ng-show="sortBy == 'img_src' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == 'img_src' && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                            <th data-ng-show="completed">
+                                <a href="" data-ng-click="sortBy=completed;sortReverse=!sortReverse;">Completed
+                                <span data-ng-show="sortBy == completed && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                                <span data-ng-show="sortBy == completed && sortReverse" class="glyphicon glyphicon-chevron-up"></span></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Old filter: hit in filtered_hits = ( hits | filter:orFilter) -->
+                        <tr data-ng-repeat="hit in hits | filter:filterBy | orderBy:sortBy:sortReverse">
+                            <td data-ng-cloak data-ng-show="id">{{ hit.id | angular }}</td>
+                            <td data-ng-cloak data-ng-show="type">{{ hit.type | angular }}</td>
+                            <td data-ng-cloak data-ng-show="question">{{ hit.question | angular }}</td>
+                            <td data-ng-cloak data-ng-show="answer">{{ hit.answer | angular }}</td>
+                            <td data-ng-cloak data-ng-show="template"><a href="/{{ hit.template | angular }}?hitId={{ hit.id | angular }}" target="_blank" data-toggle="tooltip" title="{{ hit.html | angular }}">{{ hit.template | angular }}</a></td>
+                            <td data-ng-cloak data-ng-show="img_src"><a href="{{ hit.img_src | angular }}" target="_parent">{{ hit.img_src | angular }}</a></td>
+                            <td data-ng-cloak data-ng-show="completed">{{ hit.completed | angular }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="downloadRow" class="row">
+                <div class="col-md-12 col-xs-12">
+                    <button type="button" data-ng-cloak data-ng-show="!downReady" data-ng-click="downloadTable()" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-floppy-disk"></span>Save Table</button>
+                    <a href="{{ dl_link | angular }}" class="btn btn-success btn-block" role="button" data-ng-cloak download="filtered_hits.txt" data-ng-show="downReady" data-ng-click="downReady = false;"><span class="glyphicon glyphicon-download"></span>Download</a>
+                </div>
+            </div>
+
+        </div>
+
+        <script src="{{ url_for('static', filename='js/manageHITs.js') }}"></script>
+{% endblock %}

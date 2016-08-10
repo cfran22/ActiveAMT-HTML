@@ -36,13 +36,13 @@ class ActiveAMT(object):
 
         if len(tasks) == 0:
             raise RuntimeError("You must pass at least one task to init_tasks!")
-        else:
-            global _flask_running
-            if not _flask_running:  # Only allow one Flask server to be running
-                self._flask_thread.start()
-            time.sleep(1)  # Here simply to clean up console output
-            if not building_HTML:
-                self.clib.create_hits(tasks, hit_type_init_file)
+
+        global _flask_running
+        if not _flask_running:  # Only allow one Flask server to be running
+            self._flask_thread.start()
+        time.sleep(1)  # Here simply to clean up console output
+        if not building_HTML:
+            self.clib.create_hits(tasks, hit_type_init_file)
 
     def register_observer(self, observer):
         """

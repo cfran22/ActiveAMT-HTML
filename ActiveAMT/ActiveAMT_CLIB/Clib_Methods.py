@@ -4,7 +4,6 @@ import os
 import shutil
 
 import crowdlib as cl
-
 import crowdlib_settings as cls
 from ActiveAMT.ActiveAMT_DB import HITDbHandler
 from ActiveAMT.ActiveAMT_FLASK import server_location, template_map, custom_hit_path
@@ -56,7 +55,7 @@ class Clib(object):
         Creates a HIT for the given task and sends it to the HIT database.
         """
 
-        hit = hit_type.create_hit("{}{}".format(self.server, task['template']), 450)
+        hit = hit_type.create_hit("{}{}".format(self.server, task['template']), 650)
 
         print("\n\t****Generated HIT: {}****".format(hit.id))
 
@@ -91,36 +90,44 @@ class Clib(object):
 
         Does not manipulate any of the task attributes.
         Simply makes sure the task is valid and gets the necessary HTML into the correct flask path.
-        Also flattens python dict into a string to store in the db.
+        Also flattens variables dict into a string to store in the db.
         """
 
-        # Check if the user is providing an HTML file with the 'path' key """
+        # If the user provided a desired filename, use the filename for the new flask template file
+        if 'fname' in task:
+            if not task['fname'].endswith('.html'):
+                task['fname'] = task['fname'].split('.')[0]
+                task['fname'] += '.html'
+            task['html'] = task['fname']
+
+        # Check if the user is providing an HTML file with the 'path' key
         if 'path' in task:
             # Check if the file path they provided is a valid file path
             if os.path.exists(task['path']):
-                # If file path exists, copy the file into the flask HIT templates, keeping the filename
-                shutil.copy(task['path'], (self.custom_hit_path + '/' + task['path'].split('/')[-1]))
-                task['html'] = task['path'].split('/')[-1]  # Should be just the filename.html
+                # Use the desired filename if it was provided
+                if 'fname' in task:
+                    shutil.copy(task['path'], (self.custom_hit_path + '/' + task['html']))
+                # If a desired filename was not provided, just use the existing filename
+                else:
+                    shutil.copy(task['path'], (self.custom_hit_path + '/' + task['path'].split('/')[-1]))
+                    task['html'] = task['path'].split('/')[-1]  # Should be just the filename.html
             else:
                 raise UserWarning("{} does not exist!".format(task['path']))
         # If the user does not provide an HTML file, they must provide raw HTML
         elif 'raw' in task:
-            # If the user provided a desired filename, use the filename for the new flask template file
-            if 'fname' in task:
-                if not task['fname'].endswith('.html'):
-                    task['fname'] += '.html'
-                new_custom_hit = open((self.custom_hit_path + '/' + task['fname']), 'w')
-                new_custom_hit.write(task['raw'])
-                new_custom_hit.close()
-                task['html'] = task['fname']
-            # Otherwise, get the list of custom hits currently in flask and add a new one incrementally
-            else:
+            # If the user doesn't have a desired filename, name the new file custom_hit#, where the number is sequential
+            if 'fname' not in task:
                 cur_custom_hits = glob.glob1(self.custom_hit_path, 'custom_hit*.html')
-                num_custom_hits = len(cur_custom_hits)
-                new_custom_hit = open(self.custom_hit_path + '/custom_hit{}.html'.format(++num_custom_hits), 'w')
+                num_custom_hits = len(cur_custom_hits) + 1
+                new_custom_hit = open(self.custom_hit_path + '/custom_hit{}.html'.format(num_custom_hits), 'w')
                 new_custom_hit.write(task['raw'])
                 new_custom_hit.close()
                 task['html'] = 'custom_hit{}.html'.format(num_custom_hits)
+            # Otherwise, use the desired filename
+            else:
+                new_custom_hit = open((self.custom_hit_path + '/' + task['fname']), 'w')
+                new_custom_hit.write(task['raw'])
+                new_custom_hit.close()
         else:
             raise KeyError("You must provide either a path to your HTML file with the 'path' key or the raw HTML "
                            "with the 'raw' key!")
@@ -137,6 +144,7 @@ class Clib(object):
 
             for key, value in task['db_vars'].iteritems():
                 flat_dict += "{}:{},".format(key, value)
+
             task['db_vars'] = flat_dict
 
         return task

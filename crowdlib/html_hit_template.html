@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>HIT UI</title>
+
+<style type="text/css">
+%(style)s
+</style>
+
+<script type="text/javascript">
+window.onload = function() {
+  // Get the four parameters which might be added to your URL by Mechanical Turk.
+  var assignment_id  = (location.search.match(/assignmentId=(\w+)/   )||[])[1];
+  var hit_id         = (location.search.match(/hitId=(\w+)/          )||[])[1];
+  var worker_id      = (location.search.match(/workerId=(\w+)/       )||[])[1];
+  var turk_submit_to = (location.search.match(/turkSubmitTo=([^=&]+)/)||[])[1];
+  turk_submit_to = decodeURIComponent(turk_submit_to);
+
+  // Arrange to pass the assignment ID back to the server when the form is submitted.
+  document.getElementById("assignment_id").value = assignment_id;
+
+  // Assignment ID "ASSIGNMENT_ID_NOT_AVAILABLE" of indicates preview mode.  Warn worker.
+  if( assignment_id == "ASSIGNMENT_ID_NOT_AVAILABLE" ) {
+    // PREVIEW MODE
+
+    // Warn the worker by displaying a banner at the top.
+    document.getElementById("click_accept_warning").style.display = "block";
+
+    // Disable all form elements so they don't waste time/effort.
+    var form_element_tag_names = ["input", "textarea", "select"];
+    for(var i=0; i < form_element_tag_names.length; i++) {
+      var form_elements = document.getElementsByName(form_element_tag_names[i]);
+      for(var j=0; j < form_elements.length; j++) {
+        form_elements[j].disabled = true;
+      }
+    }
+  }
+  else {
+    // Get the Submit URL, which will be added to your URL by Mechanical Turk.
+    document.getElementById("form").action = turk_submit_to + "/mturk/externalSubmit";
+  }
+
+  %(onload)s
+}
+</script>
+
+</head>
+<body>
+<form method="get" id="form" action="javascript:void(0)">
+
+<!-- Banner at the top to warn workers if this is preview mode;  hidden otherwise -->
+<h2 style="color:red; display:none" id="click_accept_warning">PREVIEW MODE</h2>
+
+%(body)s
+
+<!-- Pass back the assignment ID, as required by AMT -->
+<input type="hidden" id="assignment_id" name="assignmentId" value=""/>
+<input type="submit" id="submit_button" value="Submit" />
+
+</form>
+</body>
+</html>

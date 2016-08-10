@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+    <head>
+
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
+        {% if css %}
+        <link href="{{ url_for('static', filename='css/{}'.format(css)) }}" rel="stylesheet"/>
+        {% endif %}
+
+        <!-- AngularJS -->
+        <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+
+        <title>Image Triplet</title>
+
+        <style>
+
+            .container{
+                padding: 0;
+                margin-bottom: 20px;
+            }
+
+            h3{
+                margin-top: 10px;
+            }
+
+            #headingRow{
+                text-align: center;
+                text-decoration: underline;
+            }
+
+            #tripletContainer{
+                margin-bottom: 10px;
+                margin-left: 4px;
+                margin-right: 4px;
+            }
+
+            .singleTriplet{
+                text-align: center;
+                padding: 4px;
+                margin: 0;
+            }
+
+            .singleTripletHeading > h3{
+                text-decoration: underline;
+                font-weight: bold;
+            }
+
+            .innerWrap{
+                border: 3px solid black;
+                border-radius: 10px;
+                background-color: darkslategray;
+                color: white;
+            }
+
+            .reference{
+                padding-top: 10px;
+            }
+
+            .reference > img{
+                border: 3px solid lightgray;
+            }
+
+            .choice-wrapper{
+                padding: 5px 5px 5px 5px;
+            }
+
+            .choices{
+                padding: 10px 20px 10px 20px;
+            }
+
+            .choice{
+                border-radius: 15px;
+                border: 3px solid lightgray;
+                background-color: darkgrey;
+                color: black;
+                cursor: pointer;
+            }
+
+            .u_choice{
+                margin-top: 5px;
+            }
+
+            .u_choice > .choice > h3{
+                font-weight: bold;
+            }
+
+            .img-rounded{
+                border-radius: 13px;
+                width: 250px;
+                height: 150px;
+            }
+
+            .choice:hover{
+                border: 3px solid black;
+                border-radius: 15px;
+            }
+
+            .selectedChoice > .choice{
+                border: 3px solid black;
+                border-radius: 13px;
+                color: black;
+                background-color: #337ab7;
+                font-weight: bold;
+                font-size: 110%;
+            }
+
+            .u_choice > .choice {
+                margin-left: -12px;
+                margin-right: -12px;
+            }
+
+            #selectFields{
+                margin-right: -10px;
+                margin-left: -10px;
+            }
+
+            .btn{
+                font-weight: 700;
+                font-size: 110%;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <div id="headingRow" class="row">
+                <h3><strong>Example Image Triplet</strong></h3>
+            </div>
+
+            <div data-ng-app="img_triplets" data-ng-controller="img_triplets_controller" data-ng-cloak>
+                <div id="tripletContainer" class="row">
+
+                    <!-- Represents a single triplet -- Should be ng-repeated -->
+                    <div class="col-md-4 col-xs-12 singleTriplet">
+                        <div class="innerWrap">
+
+                            <div class="row singleTripletHeading">
+                                <h3>Question 1</h3>
+                            </div>
+
+                            <div class="row reference">
+                                <img src="{{hit_info['vars']['aurl0']}}" class="img-rounded img-responsive center-block"/>
+                            </div>
+
+                            <div class="row choices">
+                                <div class="col-md-6 col-xs-6 choice-wrapper">
+                                    <div id="b1" class="f_choice" data-ng-click="clickChoice(1, 'B', '{{hit_info['vars']['abc0']}}')">
+                                        <img src="{{hit_info['vars']['burl0']}}" class="img-rounded img-responsive choice center-block" alt="{{hit_info['vars']['abc0']}}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xs-6 choice-wrapper">
+                                    <div id="c1" class="s_choice" data-ng-click="clickChoice(1, 'C', '{{hit_info['vars']['acb0']}}')">
+                                        <img src="{{hit_info['vars']['curl0']}}" class="img-rounded img-responsive choice center-block" alt="{{hit_info['vars']['acb0']}}"/>
+                                    </div>
+                                </div>
+                                <div id="u1" class="col-md-12 col-xs-12 u_choice" data-ng-click="clickChoice(1, 'U', 'indecision')">
+                                    <div class="choice">
+                                        <h3>Undecided</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Represents a single triplet -- Should be ng-repeated -->
+                    <div class="col-md-4 col-xs-12 singleTriplet">
+                        <div class="innerWrap">
+
+                            <div class="row singleTripletHeading">
+                                <h3>Question 2</h3>
+                            </div>
+
+                            <div class="row reference">
+                                <img src="{{hit_info['vars']['aurl1']}}" class="img-responsive img-rounded center-block">
+                            </div>
+
+                            <div class="row choices">
+                                <div class="col-md-6 col-xs-6 choice-wrapper">
+                                    <div id="b2" class="f_choice" data-ng-click="clickChoice(2, 'B', '{{hit_info['vars']['abc1']}}')">
+                                        <img src="{{hit_info['vars']['burl1']}}" class="img-responsive img-rounded choice center-block" alt="{{hit_info['vars']['abc1']}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xs-6 choice-wrapper">
+                                    <div id="c2" class="s_choice" data-ng-click="clickChoice(2, 'C', '{{hit_info['vars']['acb1']}}')">
+                                        <img src="{{hit_info['vars']['curl1']}}" class="img-responsive img-rounded choice center-block" alt="{{hit_info['vars']['acb1']}}">
+                                    </div>
+                                </div>
+                                <div id="u2" class="col-md-12 col-xs-12 u_choice" data-ng-click="clickChoice(2, 'U', 'indecision')">
+                                    <div class="choice">
+                                        <h3>Undecided</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Represents a single triplet -- Should be ng-repeated -->
+                    <div class="col-md-4 col-xs-12 singleTriplet">
+                        <div class="innerWrap">
+
+                            <div class="row singleTripletHeading">
+                                <h3>Question 3</h3>
+                            </div>
+
+                            <div class="row reference">
+                                <img src="{{hit_info['vars']['aurl2']}}" class="img-responsive img-rounded center-block">
+                            </div>
+
+                            <div class="row choices">
+                                <div class="col-md-6 col-xs-6 choice-wrapper">
+                                    <div id="b3" class="f_choice" data-ng-click="clickChoice(3, 'B', '{{hit_info['vars']['abc2']}}')">
+                                        <img src="{{hit_info['vars']['burl2']}}" class="img-responsive img-rounded center-block choice" alt="{{hit_info['vars']['abc2']}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xs-6 choice-wrapper">
+                                    <div id="c3" class="s_choice" data-ng-click="clickChoice(3, 'C', '{{hit_info['vars']['acb2']}}')">
+                                        <img src="{{hit_info['vars']['curl2']}}" class="img-responsive img-rounded center-block choice" alt="{{hit_info['vars']['acb2']}}">
+                                    </div>
+                                </div>
+                                <div id="u3" class="col-md-12 col-xs-12 u_choice" data-ng-click="clickChoice(3, 'U', 'indecision')">
+                                    <div class="choice">
+                                        <h3>Undecided</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <form id="selectFields" role="form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit">
+                    <input type="text" class="hidden collectable" name="selected0" value="{{ selections.select1 | angular }}"/>
+                    <input type="text" class="hidden collectable" name="selected1" value="{{ selections.select2 | angular }}"/>
+                    <input type="text" class="hidden collectable" name="selected2" value="{{ selections.select3 | angular }}"/>
+                    <input type="text" class="hidden" name="assignmentId" value="{{hit_info['assignmentId']}}">
+                    <div class="col-md-12 col-xs-12">
+                        <button type="submit" {{enabled}} class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!--  Bootstrap required files -->
+        <script src="{{ url_for('static', filename='js/jquery-2.2.4.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <!-- Enable tooltips -->
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        </script>
+        <!-- JS to collect answers -->
+        <script src="{{ url_for('static', filename='js/answer_collector.js') }}"></script>
+        <!-- AngularJS to handle img_triplet -->
+        <script>
+            var app = angular.module('img_triplets', []);
+
+            app.controller('img_triplets_controller', function($scope){
+
+                $scope.selections = {
+                    select1: '', select2: '', select3: ''
+                };
+
+                $scope.clickChoice = function(index, choice, value){
+
+                    var options = ['b', 'c', 'u'];
+                    var selection = 'select'+index;
+                    var i = 0;
+
+                    $scope.selections[selection] = value;
+
+                    options.splice(options.indexOf(choice.toLowerCase()), 1);
+
+                    var clickedChoice = document.getElementById(choice.toLowerCase()+index.toString());
+                    var ang_clicked = angular.element(clickedChoice);
+
+                    while(i < options.length){
+                        var elem = document.getElementById(options[i]+index);
+                        var ang_elem = angular.element(elem);
+                        if(ang_elem.hasClass('selectedChoice')){
+                            ang_elem.removeClass('selectedChoice');
+                        }
+                        i++;
+                    }
+
+                    ang_clicked.addClass('selectedChoice');
+                };
+            });
+        </script>
+    </body>
+
+</html>

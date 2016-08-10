@@ -4,7 +4,7 @@ from ActiveAMT import ActiveAMT, Observer
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-                    Create Mock HITs
+                          Mock HITs
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -64,6 +64,28 @@ all_tasks = {
             'variables': {
                 'q1': "Do chickens have large talons?",
                 'q2': "Does this CSS make me look fat?"
+            }
+        },
+        {  # From cub batch-0-3.csv, first 3 lines
+            'type': 'html',
+            'path': '/home/cody_techngs/PycharmProjects/ProjTest/img_triplet.html',
+            'fname': 'fname_test',
+            'variables': {
+                'aurl0': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Corvus_ossifragus_Everglades.jpg/200px-Corvus_ossifragus_Everglades.jpg',
+                'burl0': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ovenbird_RWD2011b.jpg/200px-Ovenbird_RWD2011b.jpg',
+                'curl0': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yellow-Breasted-Chat-Oregon.jpg/200px-Yellow-Breasted-Chat-Oregon.jpg',
+                'abc0': 'Ovenbird',
+                'acb0': 'Yellow+breasted+Chat',
+                'aurl1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Brown_Pelican21K.jpg/200px-Brown_Pelican21K.jpg',
+                'burl1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Northern_Cardinal_Broadside.jpg/200px-Northern_Cardinal_Broadside.jpg',
+                'curl1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Western_Grebe_swimming.jpg/200px-Western_Grebe_swimming.jpg',
+                'abc1': 'Cardinal',
+                'acb1': 'Western+Grebe',
+                'aurl2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Black-throated_blue_warbler_%28Setophaga_caerulescens%29_male.jpg/200px-Black-throated_blue_warbler_%28Setophaga_caerulescens%29_male.jpg',
+                'burl2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Glaucous-winged_gull.jpg/200px-Glaucous-winged_gull.jpg',
+                'curl2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/HoodedOriole.jpg/200px-HoodedOriole.jpg',
+                'abc2': 'Glaucous+winged+Gull',
+                'acb2': 'Hooded+Oriole',
             }
         }
     ]
@@ -135,7 +157,7 @@ def add_to_db(task):
 
 hit_type_init_file = "/home/cody_techngs/PycharmProjects/ProjTest/ActiveAMT/ActiveAMT_CLIB/HITType.init"
 
-tasks = []
+tasks = [all_tasks['html_tasks'][3]]
 min_tasks = 3
 
 # Create instance of API
@@ -173,14 +195,14 @@ class ActiveAlgoObserver(Observer):
             add_to_db(kwargs['completed_task'])
 
 # Register the observer class with ActiveAMT
-actAMT.register_observer(ActiveAlgoObserver())
+# actAMT.register_observer(ActiveAlgoObserver())
 
 # Initialize the minimum number of tasks
 print("\nIn MOCK ALGO....")
 print("\tInitializing queue with {} tasks".format(min_tasks))
-for x in range(min_tasks):
-    new_task = make_rand_task()
-    tasks.append(new_task)
+# for x in range(min_tasks):
+#    new_task = make_rand_task()
+#    tasks.append(new_task)
 
 actAMT.init_tasks(tasks, hit_type_init_file)
 del tasks[:]

@@ -200,6 +200,8 @@ class HITDbHandler(object):
 
         for pair in kv_pairs:
             split = pair.split(':')
+            if 'http' in split[1]:
+                split[1] += ':' + split[2]
             key, val = split[0], split[1]
 
             variables[key] = val

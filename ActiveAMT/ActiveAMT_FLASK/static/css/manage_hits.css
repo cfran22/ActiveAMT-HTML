@@ -17,7 +17,7 @@ td, th{
 
 #downloadRow{
     margin-top: 10px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .input-group > .input-group-btn > ul > li > a, .dropdown > ul > li > a {
@@ -37,6 +37,10 @@ td, th{
     margin-left: 5px;
     margin-top: 10px;
     position: absolute;
+}
+
+.glyphicon-floppy-disk{
+    margin-right: 5px;
 }
 
 .table{
@@ -74,4 +78,33 @@ td, th{
 #typeCol{
     width: 1%;
     white-space: nowrap;
+}
+
+.glyphicon-download {
+    margin-right: 6px;
+    font-size: 110%;
+}
+
+
+
+#allFiltDD{
+    margin-right: 12px;
+    padding-bottom: 5px;
+    background-color: lightgray;
+    width: 93%;
+}
+
+#allFiltDD > li{
+    margin-top: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-right: 8px;
+}
+
+#allFiltDD > li > div > input {
+    margin-left: 22px;
+}
+
+#allFiltDD > li > div > label{
+    padding-right: 2px;
 }

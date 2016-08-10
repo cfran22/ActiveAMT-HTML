@@ -9,13 +9,13 @@
                     <div class="form-group">
                         <label for="hit_ans">{{hit_info['hit_quest']}}</label>
                         <img id="hit_img" src="{{hit_info['img_src']}}" class="img img-responsive img-rounded">
-                        <input id="hit_ans" {{enabled}} required type="text" class="form-control" placeholder="Answer" name="answer"/>
+                        <input id="hit_ans" {{enabled}} autofocus required type="text" class="form-control collectable" placeholder="Answer" name="answer"/>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-offset-7 col-md-3 col-xs-12">
-                    <button {{enabled}} autofocus required type="submit" class="btn btn-primary btn-block" onclick="getAnswer()">Submit</button>
+                    <button {{enabled}} type="submit" class="btn btn-primary btn-block">Submit</button>
                 </div>
             </div>
 

@@ -1,6 +1,6 @@
-from crowdlib import settings as cls
 import os
 
+from crowdlib import settings as cls
 
 ############################################################
 # SERVICE TYPE
@@ -22,8 +22,6 @@ cls.aws_account_id = "AKIAIW4DPZSUQKGPOMFA"
 
 # "Secret Access Key" from AWS -- like a private key
 cls.aws_account_key = "Wv0riAVviH2L/CceEnOMV5EoG5dgMUC13NloDLpz"
-
-
 
 ############################################################
 # DATABASE LOCATION
